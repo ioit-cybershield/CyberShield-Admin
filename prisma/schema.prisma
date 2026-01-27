@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Event {
+  id          String   @id
+  date        DateTime
+  title       String
+  time        String?
+  location    String?
+  summary     String
+  description String?
+  imageUrl    String?
+  link        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model LandingContent {
+  key         String   @id
+  heroTitle   String
+  heroSubtitle String?
+  bulletsJson String   // JSON-encoded list of bullets
+  updatedAt   DateTime @updatedAt
+}
+
+model User {
+  id       String @id @default(uuid())
+  email    String @unique
+  password String           // or integrate a full auth library later
+  role     String @default("ADMIN")
+}
