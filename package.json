@@ -12,6 +12,7 @@
     "@neondatabase/serverless": "^1.0.2",
     "@prisma/adapter-neon": "^7.3.0",
     "@prisma/client": "^7.3.0",
+    "better-auth": "^1.4.18",
     "next": "16.1.5",
     "react": "19.2.3",
     "react-dom": "19.2.3"
