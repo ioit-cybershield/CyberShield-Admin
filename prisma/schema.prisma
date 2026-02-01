@@ -98,3 +98,13 @@ model Verification {
   @@index([identifier])
   @@map("verification")
 }
+
+model Jwks {
+  id         String    @id
+  publicKey  String
+  privateKey String
+  createdAt  DateTime
+  expiresAt  DateTime?
+
+  @@map("jwks")
+}
