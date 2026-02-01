@@ -1,13 +1,16 @@
 // scripts/create-admin.ts
 import "dotenv/config";
 // import { prisma } from "@/lib/prisma";
-import { auth } from "../src/lib/auth";
+import { auth } from "@/lib/auth";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL!;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!;
 const ADMIN_NAME = process.env.ADMIN_NAME ?? "Site Admin";
 
 async function main() {
+  console.log("Creating admin user...");
+  console.log(`Email: ${ADMIN_EMAIL}`);
+  console.log(`Password: ${ADMIN_PASSWORD}`);
   const admin = await auth.api.signUpEmail({
     body: {
       email: ADMIN_EMAIL,
