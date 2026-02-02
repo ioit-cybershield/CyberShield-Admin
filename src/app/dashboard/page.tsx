@@ -260,7 +260,7 @@ export default function OverviewComponent() {
   return (
     <div className="h-screen w-screen bg-[#0a0a0a] overflow-hidden flex flex-col">
       {/* Navbar Placeholder */}
-      <nav className="h-15 shrink-0 bg-[#0a0a0a] border-b border-white/10 flex items-center justify-between px-6">
+      {/* <nav className="h-15 shrink-0 bg-[#0a0a0a] border-b border-white/10 flex items-center justify-between px-6">
         <div className="text-white font-semibold text-lg tracking-tight">
           relats
         </div>
@@ -273,8 +273,15 @@ export default function OverviewComponent() {
           </div>
         </div>
         <div className="w-8" />
-      </nav>
-
+      </nav> */}
+      {/* // Inside your dashboard layout, maybe near the bottom: */}
+      <a
+        href="/dashboard/navbar"
+        className="inline-flex items-center gap-2 rounded-xl border border-black/10 px-4 py-3 text-sm font-medium hover:bg-black hover:text-white transition-colors"
+      >
+        Manage Navbar
+        <ArrowRight className="w-4 h-4" />
+      </a>
       {/* Main Content - fills remaining viewport height */}
       <section className="flex-1 p-3 min-h-0">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 h-full max-w-450 mx-auto">

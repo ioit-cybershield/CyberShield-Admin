@@ -85,3 +85,18 @@ model Jwks {
 
   @@map("jwks")
 }
+
+model Navbar {
+  id        String   @id @default(cuid())
+  key       String   @unique        // "events", "gallery", etc.
+  label     String
+  href      String?
+  order     Int      @default(0)    // for sorting in the navbar
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isActive  Boolean  @default(true)
+
+  @@map("navbar")
+  @@index([key])
+}
