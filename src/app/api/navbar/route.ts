@@ -1,49 +1,88 @@
 // src/app/api/navbar/route.ts
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-export async function GET() {
-  const items = await prisma.navbar.findMany({
-    where: { isActive: true },
-    orderBy: { order: "asc" },
-  });
+// CORS headers configuration
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "http://localhost:4321", // Or specify your domain: "https://example.com"
+  "Access-Control-Allow-Methods": "GET, PUT, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
 
-  return NextResponse.json({ items });
+// Handle preflight requests
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
 }
 
-export async function PUT(request: Request) {
-  const body = (await request.json()) as {
-    items: {
-      id?: string;
-      key: string;
-      label: string;
-      href?: string;
-      order: number;
-      isActive?: boolean;
-    }[];
-  };
+export async function GET() {
+  try {
+    const items = await prisma.navbar.findMany({
+      orderBy: { order: "asc" },
+    });
 
-  // Simple upsert loop – you can optimize later.
-  const ops = body.items.map((item) =>
-    prisma.navbar.upsert({
-      where: { key: item.key },
-      create: {
-        key: item.key,
-        label: item.label,
-        href: item.href ?? null,
-        order: item.order,
-        isActive: item.isActive ?? true,
-      },
-      update: {
-        label: item.label,
-        href: item.href ?? null,
-        order: item.order,
-        isActive: item.isActive ?? true,
-      },
-    }),
-  );
+    return NextResponse.json({ items }, { status: 200, headers: corsHeaders });
+  } catch (error) {
+    console.error("Error fetching navbar items:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch navbar items" },
+      { status: 500, headers: corsHeaders },
+    );
+  }
+}
 
-  const result = await prisma.$transaction(ops);
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { items } = body;
 
-  return NextResponse.json({ items: result });
+    if (!Array.isArray(items)) {
+      return NextResponse.json(
+        { error: "Invalid request: items must be an array" },
+        { status: 400, headers: corsHeaders },
+      );
+    }
+
+    // Validate each item
+    for (const item of items) {
+      if (!item.key || !item.label) {
+        return NextResponse.json(
+          { error: "Each item must have a key and label" },
+          { status: 400, headers: corsHeaders },
+        );
+      }
+    }
+
+    // Use transaction to update all items
+    const operations = items.map((item) =>
+      prisma.navbar.upsert({
+        where: { key: item.key },
+        create: {
+          key: item.key,
+          label: item.label,
+          href: item.href || null,
+          order: item.order || 0,
+          isActive: item.isActive ?? true,
+        },
+        update: {
+          label: item.label,
+          href: item.href || null,
+          order: item.order || 0,
+          isActive: item.isActive ?? true,
+        },
+      }),
+    );
+
+    const result = await prisma.$transaction(operations);
+
+    return NextResponse.json(
+      { items: result },
+      { status: 200, headers: corsHeaders },
+    );
+  } catch (error) {
+    console.error("Error updating navbar items:", error);
+    return NextResponse.json(
+      { error: "Failed to update navbar items" },
+      { status: 500, headers: corsHeaders },
+    );
+  }
 }

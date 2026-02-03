@@ -86,17 +86,35 @@ model Jwks {
   @@map("jwks")
 }
 
+// prisma/schema.prisma - Update the Navbar model
+
 model Navbar {
   id        String   @id @default(cuid())
-  key       String   @unique        // "events", "gallery", etc.
-  label     String
-  href      String?
-  order     Int      @default(0)    // for sorting in the navbar
-
+  key       String   @unique // events, gallery, team, about
+  label     String   // Display text
+  href      String?  // URL path
+  order     Int      @default(0) // For sorting
+  isActive  Boolean  @default(true) // Show/hide items
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  isActive  Boolean  @default(true)
 
   @@map("navbar")
-  @@index([key])
+  @@index([order])
+}
+
+
+// Remove the old 'model Navbar' if you are okay with starting fresh
+// or keep it for legacy reference until migration is done.
+
+model SiteSection {
+  id        String   @id @default(cuid())
+  key       String   @unique // e.g. "navbar", "landing-hero", "footer"
+  
+  // This JSON field stores everything: links, video URLs, button text, etc.
+  content   Json     
+
+  lastUpdatedBy String?
+  updatedAt     DateTime @updatedAt
+  
+  @@map("site_section")
 }
