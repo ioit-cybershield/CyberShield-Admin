@@ -11,5 +11,5 @@ export const auth = betterAuth({
     enabled: true,
   },
   plugins: [jwt()],
-  baseURL: process.env.BETTER_AUTH_BASE_URL || "http://localhost:3000",
+  baseURL: process.env.BETTER_AUTH_BASE_URL!
 });
