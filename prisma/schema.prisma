@@ -89,7 +89,7 @@ model Jwks {
 // prisma/schema.prisma - Update the Navbar model
 
 model Navbar {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   key       String   @unique // events, gallery, team, about
   label     String   // Display text
   href      String?  // URL path
@@ -102,19 +102,54 @@ model Navbar {
   @@index([order])
 }
 
+model LandingHero {
+  id             String   @id @default(uuid())
+  // Main title lines
+  titleLine1     String   // e.g. "Cyber-Security"
+  titleLine2     String   // e.g. "FOR"
+  titleLine3     String   // e.g. "Everyone"
 
-// Remove the old 'model Navbar' if you are okay with starting fresh
-// or keep it for legacy reference until migration is done.
+  // Bottom text lines under the title
+  bottomLine1    String   // "EMPOWERING A COMMUNITY"
+  bottomLine2    String   // "WHERE STUDENTS CONNECT, LEARN & LEAD"
 
-model SiteSection {
-  id        String   @id @default(cuid())
-  key       String   @unique // e.g. "navbar", "landing-hero", "footer"
+  // Primary CTA
+  primaryLabel   String   // "Join CyberShield"
+  primaryHref    String   // "/contact"
+
+  // Secondary CTA
+  secondaryLabel String   // "View upcoming events"
+  secondaryHref  String   // "/events"
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("landing_hero")
+  @@index([id])
   
-  // This JSON field stores everything: links, video URLs, button text, etc.
-  content   Json     
-
-  lastUpdatedBy String?
-  updatedAt     DateTime @updatedAt
-  
-  @@map("site_section")
 }
+
+model LandingAbout {
+  id            String   @id @default(cuid())
+  scribbleLabel String   // "Why CyberShield?"
+  headline      String   // Main big sentence
+
+  item1Title    String
+  item1Text     String
+  item2Title    String
+  item2Text     String
+  item3Title    String
+  item3Text     String
+
+  numberLeft    Int      // 20
+  numberRight   Int      // 25
+
+  updatedAt     DateTime @updatedAt
+  createdAt     DateTime @default(now())
+
+  @@map("landing_about")
+  @@index([id])
+}
+
+
+
