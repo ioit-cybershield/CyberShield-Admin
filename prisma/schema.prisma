@@ -151,20 +151,25 @@ model LandingAbout {
   @@index([id])
 }
 
+
 model LandingTimeline {
   id         String   @id @default(cuid())
-  key        String   @unique          // "past", "today", "future"
-  label      String                  // Visible label, e.g. "Past"
-  titleLines String                  // e.g. "Early days, of CyberShield"
+  key        String   @unique    // "past", "today", "future"
+  label      String                    // Visible label, e.g. "Past"
+
+  titleLine1 String                    // First title line (required)
+  titleLine2 String?                   // Second title line (optional)
+
   desc       String
 
-  order      Int      @default(0)    // Controls spinner text order
+  order      Int      @default(0)      // Controls spinner text order
 
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
   @@map("landing_timeline")
 }
+
 
 
 

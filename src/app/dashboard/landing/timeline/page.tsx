@@ -3,23 +3,30 @@
 
 import React, { useEffect, useState } from "react";
 import { Toaster, toast } from "sonner";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft, Save, Trash2, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { RebuildButton } from "@/components/RebuildButton";
 
 type TimelineEditorState = {
   key: string;
-  order: number;
   label: string;
   titleLine1: string;
-  titleLine2: string;
+  titleLine2?: string;
   desc: string;
+};
+
+type ApiTimelineState = {
+  key: string;
+  label: string;
+  titleLine1: string;
+  titleLine2: string | null;
+  desc: string;
+  order?: number | null;
 };
 
 const DEFAULT_STATES: TimelineEditorState[] = [
   {
     key: "past",
-    order: 1,
     label: "Past",
     titleLine1: "Early days",
     titleLine2: "of CyberShield",
@@ -27,17 +34,15 @@ const DEFAULT_STATES: TimelineEditorState[] = [
   },
   {
     key: "today",
-    order: 2,
     label: "Today",
-    titleLine1: "Active community,",
+    titleLine1: "Active community",
     titleLine2: "learning by doing",
     desc: "Regular workshops, CTFs, awareness sessions and internal projects.",
   },
   {
     key: "future",
-    order: 3,
     label: "Future",
-    titleLine1: "Scaling impact,",
+    titleLine1: "Scaling impact",
     titleLine2: "across the campus",
     desc: "Collaborations, intercollege events, research and advanced tracks.",
   },
@@ -64,34 +69,36 @@ export default function LandingTimelineEditorPage() {
 
         const data = await res.json();
 
-        if (
-          !data.states ||
-          !Array.isArray(data.states) ||
-          data.states.length === 0
-        ) {
+        if (!data.states || !Array.isArray(data.states)) {
           setStates(DEFAULT_STATES);
           return;
         }
 
-        const mapped: TimelineEditorState[] = data.states
-          .sort((a: any, b: any) => (a.order ?? 0) - (b.order ?? 0))
-          .map((state: any) => {
-            const rawTitle: string = state.titleLines ?? "";
-            const [line1, line2 = ""] = rawTitle
-              .split(",", 2)
-              .map((s) => s.trim());
+        const apiStates = data.states as ApiTimelineState[];
 
-            return {
-              key: state.key,
-              order: typeof state.order === "number" ? state.order : 0,
-              label: state.label ?? "",
-              titleLine1: line1,
-              titleLine2: line2,
-              desc: state.desc ?? "",
-            };
-          });
+        if (apiStates.length === 0) {
+          setStates(DEFAULT_STATES);
+          return;
+        }
 
-        setStates(mapped);
+        // Sort by order if present, then clamp to max 3
+        const sorted = [...apiStates].sort((a, b) => {
+          const ao = typeof a.order === "number" ? a.order : 0;
+          const bo = typeof b.order === "number" ? b.order : 0;
+          return ao - bo;
+        });
+
+        const mapped: TimelineEditorState[] = sorted
+          .slice(0, 3)
+          .map((state, index) => ({
+            key: state.key ?? `state-${index}`,
+            label: state.label ?? "",
+            titleLine1: state.titleLine1 ?? "",
+            titleLine2: state.titleLine2 ?? undefined,
+            desc: state.desc ?? "",
+          }));
+
+        setStates(mapped.length > 0 ? mapped : DEFAULT_STATES);
       } catch (error) {
         console.error(error);
         toast.error("Failed to load timeline content");
@@ -116,16 +123,64 @@ export default function LandingTimelineEditorPage() {
     );
   };
 
+  const handleAddState = () => {
+    if (states.length >= 3) {
+      toast.error("You can have at most 3 timeline sections");
+      return;
+    }
+
+    setStates((prev) => [
+      ...prev,
+      {
+        key: `state-${Date.now()}`,
+        label: "New section",
+        titleLine1: "",
+        titleLine2: "",
+        desc: "",
+      },
+    ]);
+  };
+
+  const handleRemoveState = (index: number) => {
+    if (states.length <= 1) {
+      toast.error("At least one timeline section is required");
+      return;
+    }
+
+    setStates((prev) => prev.filter((_, i) => i !== index));
+  };
+
   const handleSave = async () => {
+    if (states.length === 0 || states.length > 3) {
+      toast.error("Timeline must have between 1 and 3 sections");
+      return;
+    }
+
+    for (const state of states) {
+      if (
+        !state.key ||
+        !state.label.trim() ||
+        !state.titleLine1.trim() ||
+        !state.desc.trim()
+      ) {
+        toast.error(
+          "Each section needs a key, label, first title line, and description",
+        );
+        return;
+      }
+    }
+
     setIsSaving(true);
     try {
       const payload = {
-        states: states.map((s) => ({
+        states: states.map((s, index) => ({
           key: s.key,
-          order: s.order,
           label: s.label.trim(),
-          titleLines: [s.titleLine1, s.titleLine2].filter(Boolean).join(", "),
+          titleLine1: s.titleLine1.trim(),
+          titleLine2: s.titleLine2?.trim() || null,
           desc: s.desc.trim(),
+          // Order is derived from the current position; admin does not edit it directly
+          order: index + 1,
         })),
       };
 
@@ -210,14 +265,27 @@ export default function LandingTimelineEditorPage() {
           {/* Form section */}
           <section className="space-y-6">
             <div className="rounded-2xl border border-black/10 bg-white p-6">
-              <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-black/60">
-                Timeline stages
-              </h2>
-              <p className="mb-4 text-xs text-black/60">
-                Edit the label, heading and description for each stage. These
-                changes will drive the text around the spinner on the landing
-                page, while preserving all existing animations.
-              </p>
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <div>
+                  <h2 className="text-sm font-semibold uppercase tracking-wider text-black/60">
+                    Timeline stages
+                  </h2>
+                  <p className="mt-1 text-xs text-black/60">
+                    Edit the label, heading and description for each stage. You
+                    can have up to three sections; their order is based on the
+                    list below.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleAddState}
+                  disabled={states.length >= 3}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-black/15 px-3 py-1.5 text-xs font-medium text-black hover:border-black/40 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Add section
+                </button>
+              </div>
 
               <div className="space-y-4">
                 {states.map((state, index) => (
@@ -225,9 +293,20 @@ export default function LandingTimelineEditorPage() {
                     key={state.key ?? index}
                     className="rounded-xl border border-black/10 bg-black/2 p-4"
                   >
-                    <p className="mb-2 text-[10px] font-mono uppercase tracking-[0.16em] text-black/40">
-                      Item {index + 1} · {state.key}
-                    </p>
+                    <div className="mb-3 flex items-center justify-between gap-3">
+                      <p className="text-[10px] font-mono uppercase tracking-[0.16em] text-black/40">
+                        Item {index + 1} · {state.key || "unnamed"}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveState(index)}
+                        disabled={states.length <= 1}
+                        className="inline-flex items-center gap-1.5 text-[11px] text-red-600 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-40"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                        Remove
+                      </button>
+                    </div>
 
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
                       {/* Left side: meta */}
@@ -246,32 +325,34 @@ export default function LandingTimelineEditorPage() {
                             placeholder="Past"
                           />
                         </div>
-
                         <div>
                           <label className="block text-[11px] font-medium uppercase tracking-wider text-black/60">
-                            Order
+                            Internal key
                           </label>
                           <input
-                            type="number"
-                            value={state.order}
+                            type="text"
+                            value={state.key}
                             onChange={(e) =>
-                              handleChange(
-                                index,
-                                "order",
-                                Number(e.target.value) || 0,
-                              )
+                              handleChange(index, "key", e.target.value)
                             }
-                            className="mt-1 w-full rounded-lg border border-black/20 px-3 py-2 text-sm focus:border-black focus:outline-none"
-                            min={0}
+                            className="mt-1 w-full rounded-lg border border-black/20 px-3 py-2 text-xs font-mono focus:border-black focus:outline-none"
+                            placeholder="past"
                           />
+                          <p className="mt-1 text-[10px] text-black/40">
+                            Used as a stable identifier. Keep it lowercase and
+                            unique.
+                          </p>
                         </div>
+                        <p className="text-[10px] font-mono uppercase tracking-[0.16em] text-black/40">
+                          Step {index + 1} in scroll sequence
+                        </p>
                       </div>
 
-                      {/* Right side: title + body */}
+                      {/* Right side: heading + description */}
                       <div className="space-y-3 md:col-span-8">
                         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                           <div>
-                            <label className="mb-1 block text-[11px] font-medium uppercase tracking-wider text-black/60">
+                            <label className="block text-[11px] font-medium uppercase tracking-wider text-black/60">
                               Title line 1
                             </label>
                             <input
@@ -284,17 +365,17 @@ export default function LandingTimelineEditorPage() {
                                   e.target.value,
                                 )
                               }
-                              className="w-full rounded-lg border border-black/20 px-3 py-2 text-sm focus:border-black focus:outline-none"
+                              className="mt-1 w-full rounded-lg border border-black/20 px-3 py-2 text-sm focus:border-black focus:outline-none"
                               placeholder="Early days"
                             />
                           </div>
                           <div>
-                            <label className="mb-1 block text-[11px] font-medium uppercase tracking-wider text-black/60">
-                              Title line 2
+                            <label className="block text-[11px] font-medium uppercase tracking-wider text-black/60">
+                              Title line 2 (optional)
                             </label>
                             <input
                               type="text"
-                              value={state.titleLine2}
+                              value={state.titleLine2 ?? ""}
                               onChange={(e) =>
                                 handleChange(
                                   index,
@@ -302,7 +383,7 @@ export default function LandingTimelineEditorPage() {
                                   e.target.value,
                                 )
                               }
-                              className="w-full rounded-lg border border-black/20 px-3 py-2 text-sm focus:border-black focus:outline-none"
+                              className="mt-1 w-full rounded-lg border border-black/20 px-3 py-2 text-sm focus:border-black focus:outline-none"
                               placeholder="of CyberShield"
                             />
                           </div>
@@ -327,10 +408,16 @@ export default function LandingTimelineEditorPage() {
                   </div>
                 ))}
               </div>
+
+              <p className="mt-4 text-[11px] text-black/45">
+                The order of sections above defines the scroll sequence around
+                the spinner. You can reorder them by rearranging this list (drag
+                &amp; drop can be added later).
+              </p>
             </div>
           </section>
 
-          {/* Preview section */}
+          {/* Preview */}
           <section className="lg:sticky lg:top-24 h-fit">
             <TimelinePreview states={states} />
           </section>
@@ -341,55 +428,38 @@ export default function LandingTimelineEditorPage() {
 }
 
 function TimelinePreview({ states }: { states: TimelineEditorState[] }) {
-  // Sort by order to match frontend behavior
-  const ordered = [...states].sort((a, b) => a.order - b.order);
+  const previewStates = states.slice(0, 3);
 
   return (
     <div className="w-full overflow-hidden rounded-2xl border border-black/10 bg-white">
       <div className="border-b border-black/10 bg-black/5 px-4 py-2 text-[10px] font-medium uppercase tracking-[0.16em] text-black/60">
-        Landing Timeline · Live preview
+        Landing Timeline – Live preview
       </div>
-
-      <div className="space-y-6 bg-[#111111] px-6 pb-8 pt-6 text-white">
-        <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-white/60">
-          Spinner stages
-        </p>
-
-        <div className="space-y-5">
-          {ordered.map((state, index) => {
-            const isCurrent = index === 1; // visually treat the second item as "active"
-            return (
-              <div
-                key={state.key ?? index}
-                className="flex flex-col gap-1 border-l border-white/10 pl-4"
-              >
-                <span
-                  className={[
-                    "text-[11px] font-semibold uppercase tracking-[0.2em]",
-                    isCurrent ? "text-[#E4B03C]" : "text-white/50",
-                  ].join(" ")}
-                >
-                  {state.label}
-                </span>
-                <h3 className="text-base font-semibold leading-snug tracking-tight md:text-lg">
-                  <span className="block">{state.titleLine1}</span>
-                  {state.titleLine2 && (
-                    <span className="block">{state.titleLine2}</span>
-                  )}
-                </h3>
-                <p className="max-w-md text-xs leading-relaxed text-white/70 md:text-sm">
-                  {state.desc}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-
-        <p className="mt-4 text-[10px] text-white/40">
-          This preview matches the text hierarchy and spacing of the landing
-          page timeline, while the actual spinner geometry and GSAP animations
-          remain implemented in the main site code.
-        </p>
+      <div className="space-y-8 bg-[#f8f5f2] px-6 pb-10 pt-8">
+        {previewStates.map((state, index) => (
+          <div key={state.key ?? index} className="space-y-2">
+            <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#2e2522]/70">
+              {state.label || `Stage ${index + 1}`}
+            </p>
+            <div className="text-2xl font-medium leading-tight tracking-tight md:text-3xl">
+              {state.titleLine1 && (
+                <p className="leading-tight">{state.titleLine1}</p>
+              )}
+              {state.titleLine2 && (
+                <p className="leading-tight">{state.titleLine2}</p>
+              )}
+            </div>
+            <p className="max-w-md text-sm leading-relaxed text-black/70 md:text-base">
+              {state.desc ||
+                "Description will appear here once you add content."}
+            </p>
+          </div>
+        ))}
+        {previewStates.length === 0 && (
+          <p className="text-sm text-black/60">
+            Add at least one timeline section to see the preview.
+          </p>
+        )}
       </div>
     </div>
   );
