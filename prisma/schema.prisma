@@ -168,7 +168,31 @@ model LandingTimeline {
   updatedAt  DateTime @updatedAt
 
   @@map("landing_timeline")
+  @@index([id])
 }
+
+model LandingGalleryItem {
+  id            String   @id @default(cuid())
+  title         String
+  subtitle      String?
+  description   String
+  tags          String[]
+  buttonLabel   String?
+  buttonHref    String?
+
+  imageBlobPath String   // e.g. "gallery/uuid.png"
+  imageUrl      String   // e.g. "https://...blob.vercel-storage.com/gallery/uuid.png"
+  imageAlt      String
+
+  slot          Int?
+  isVisible     Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("landing_gallery_item")
+}
+
+
 
 
 
