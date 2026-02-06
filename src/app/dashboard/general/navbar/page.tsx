@@ -39,7 +39,7 @@ export default function NavbarEditorPage() {
   useEffect(() => {
     async function loadNavbar() {
       try {
-        const res = await fetch("/api/navbar");
+        const res = await fetch("/api/general/navbar");
         if (!res.ok) throw new Error("Failed to fetch");
         const data = await res.json();
         setItems(data.items || []);
@@ -81,7 +81,7 @@ export default function NavbarEditorPage() {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      const res = await fetch("/api/navbar", {
+      const res = await fetch("/api/general/navbar", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ items }),

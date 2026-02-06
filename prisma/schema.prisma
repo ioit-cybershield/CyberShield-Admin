@@ -192,6 +192,39 @@ model LandingGalleryItem {
   @@map("landing_gallery_item")
 }
 
+model LandingFooter {
+  id             String   @id @default(cuid())
+
+  // Top grid (4 tiles)
+  gridLink1Label String
+  gridLink1Href  String
+  gridLink2Label String
+  gridLink2Href  String
+  gridLink3Label String
+  gridLink3Href  String
+  gridLink4Label String
+  gridLink4Href  String
+
+  // Bottom main link
+  homeLinkLabel  String
+  homeLinkHref   String
+
+  // Copyright line
+  copyrightText  String
+
+  // Dynamic arrays stored as JSON
+  // legalLinks: [{ id, label, href, order }]
+  legalLinks     Json
+
+  // socialLinks: [{ id, platform, label, href, order }]
+  socialLinks    Json
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("landingfooter")
+}
+
 
 
 
