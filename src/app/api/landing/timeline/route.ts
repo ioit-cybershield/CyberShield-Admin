@@ -7,15 +7,9 @@ import {
   listTimelineStates,
   upsertTimelineStates,
 } from "@/services/timelineServices";
+import { buildCorsHeaders } from "@/lib/cors";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin":
-    process.env.NODE_ENV === "production"
-      ? (process.env.PUBLICSITEORIGIN ?? "https://ioit-cybershield.github.io")
-      : "http://localhost:4321",
-  "Access-Control-Allow-Methods": "GET, PUT, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-} as const;
+const corsHeaders = buildCorsHeaders(["GET", "PUT", "OPTIONS"]);
 
 export async function OPTIONS() {
   return NextResponse.json({}, { headers: corsHeaders });

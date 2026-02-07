@@ -2,15 +2,9 @@
 import { NextResponse } from "next/server";
 import { getDefaultGalleryItems } from "@/static/galleryDefaults";
 import { upsertGalleryItems } from "@/services/galleryService";
+import { buildCorsHeaders } from "@/lib/cors";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin":
-    process.env.NODE_ENV === "production"
-      ? (process.env.PUBLICSITEORIGIN ?? "https://ioit-cybershield.github.io")
-      : "http://localhost:4321",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-} as const;
+const corsHeaders = buildCorsHeaders(["POST", "OPTIONS"]);
 
 export async function OPTIONS() {
   return NextResponse.json({}, { headers: corsHeaders });
