@@ -226,6 +226,32 @@ model LandingFooter {
 }
 
 
+model LandingCta {
+  id             String   @id @default(cuid())
+
+  // Top heading
+  headingLine1   String   // "You don't get many"
+  headingLine2   String   // "chances to be early."
+
+  // Bottom-right CTA block
+  subhead        String   // "To lead, not follow."
+  body           String   // Long paragraph, can contain \n\n for line breaks
+
+  // Primary CTA button
+  primaryLabel   String   // "REQUEST ACCESS >>"
+  primaryHref    String   // "/request-access" or external
+
+  // Secondary CTA button
+  secondaryLabel String   // "TALK TO OUR TEAM >>"
+  secondaryHref  String   // "/contact" or external
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("landing_cta")
+}
+
+
 
 
 
