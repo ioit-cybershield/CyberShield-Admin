@@ -1,35 +1,37 @@
-// src/app/api/navbar/seed/route.ts
+// src/app/api/general/navbar/seed/route.ts
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import { getDefaultNavbarItems } from "@/static/navbarDefaults";
+import { upsertNavbarItems } from "@/services/navbarService";
 
-const DEFAULT_NAVBAR_ITEMS = [
-  { key: "events", label: "Events", href: "/events", order: 1 },
-  { key: "gallery", label: "Gallery", href: "/gallery", order: 2 },
-  { key: "team", label: "Team", href: "/team", order: 3 },
-  { key: "about", label: "About Us", href: "/about", order: 4 },
-];
+const corsHeaders = {
+  "Access-Control-Allow-Origin":
+    process.env.NODE_ENV === "production"
+      ? (process.env.PUBLICSITEORIGIN ?? "https://ioit-cybershield.github.io")
+      : "http://localhost:4321",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+} as const;
 
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
+
+// POST: seed default navbar items explicitly
 export async function POST() {
   try {
-    const operations = DEFAULT_NAVBAR_ITEMS.map((item) =>
-      prisma.navbar.upsert({
-        where: { key: item.key },
-        create: item,
-        update: {},
-      }),
-    );
+    const defaults = getDefaultNavbarItems();
 
-    const result = await prisma.$transaction(operations);
+    const items = await upsertNavbarItems(defaults);
 
     return NextResponse.json(
-      { message: "Navbar seeded successfully", items: result },
-      { status: 200 },
+      { message: "Navbar seeded successfully", items },
+      { status: 200, headers: corsHeaders },
     );
   } catch (error) {
-    console.error("Error seeding navbar:", error);
+    console.error("Error seeding navbar", error);
     return NextResponse.json(
       { error: "Failed to seed navbar" },
-      { status: 500 },
+      { status: 500, headers: corsHeaders },
     );
   }
 }

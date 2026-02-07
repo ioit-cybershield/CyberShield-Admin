@@ -1,54 +1,37 @@
+// src/app/api/landing/timeline/seed/route.ts
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import { getDefaultTimelineStates } from "@/static/timelineDefaults";
+import { upsertTimelineStates } from "@/services/timelineServices";
 
-const DEFAULT_TIMELINE_STATES = [
-  {
-    key: "past",
-    order: 1,
-    label: "Past",
-    titleLine1: "Early days",
-    titleLine2: "of CyberShield",
-    desc: "How the club started, first meetups, and initial workshops.",
-  },
-  {
-    key: "today",
-    order: 2,
-    label: "Today",
-    titleLine1: "Active community",
-    titleLine2: "learning by doing",
-    desc: "Regular workshops, CTFs, awareness sessions and internal projects.",
-  },
-  {
-    key: "future",
-    order: 3,
-    label: "Future",
-    titleLine1: "Scaling impact",
-    titleLine2: "across the campus",
-    desc: "Collaborations, intercollege events, research and advanced tracks.",
-  },
-];
+const corsHeaders = {
+  "Access-Control-Allow-Origin":
+    process.env.NODE_ENV === "production"
+      ? (process.env.PUBLICSITEORIGIN ?? "https://ioit-cybershield.github.io")
+      : "http://localhost:4321",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+} as const;
 
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
+
+// POST: seed default timeline states explicitly
 export async function POST() {
   try {
-    const ops = DEFAULT_TIMELINE_STATES.map((state) =>
-      prisma.landingTimeline.upsert({
-        where: { key: state.key },
-        create: state,
-        update: state,
-      }),
-    );
+    const defaults = getDefaultTimelineStates();
 
-    const timeline = await prisma.$transaction(ops);
+    const states = await upsertTimelineStates(defaults);
 
     return NextResponse.json(
-      { message: "Landing timeline seeded successfully", states: timeline },
-      { status: 200 },
+      { message: "Landing timeline seeded successfully", states },
+      { status: 200, headers: corsHeaders },
     );
   } catch (error) {
     console.error("Error seeding landing timeline", error);
     return NextResponse.json(
       { error: "Failed to seed landing timeline" },
-      { status: 500 },
+      { status: 500, headers: corsHeaders },
     );
   }
 }

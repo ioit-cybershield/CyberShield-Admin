@@ -1,41 +1,38 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/app/api/landing/hero/route.ts
+import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import { landingHeroUpdateSchema } from "@/schemas/hero";
+import { getHero, upsertHero } from "@/services/heroService";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "http://localhost:4321",
+  "Access-Control-Allow-Origin":
+    process.env.NODE_ENV === "production"
+      ? (process.env.PUBLICSITEORIGIN ?? "https://ioit-cybershield.github.io")
+      : "http://localhost:4321",
   "Access-Control-Allow-Methods": "GET, PUT, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
-};
+} as const;
 
 export async function OPTIONS() {
   return NextResponse.json({}, { headers: corsHeaders });
 }
 
+// GET: fetch hero from DB only (no auto-seed)
 export async function GET() {
   try {
-    let hero = await prisma.landingHero.findFirst();
+    const hero = await getHero();
 
-    // Seed a default row if it doesn't exist yet
     if (!hero) {
-      hero = await prisma.landingHero.create({
-        data: {
-          titleLine1: "Cyber-Security",
-          titleLine2: "FOR",
-          titleLine3: "Everyone",
-          bottomLine1: "EMPOWERING A COMMUNITY",
-          bottomLine2: "WHERE STUDENTS CONNECT, LEARN & LEAD",
-          primaryLabel: "Join CyberShield",
-          primaryHref: "/contact",
-          secondaryLabel: "View upcoming events",
-          secondaryHref: "/events",
-        },
-      });
+      return NextResponse.json(
+        { error: "Hero not seeded yet" },
+        { status: 404, headers: corsHeaders },
+      );
     }
 
     return NextResponse.json({ hero }, { status: 200, headers: corsHeaders });
   } catch (error) {
-    console.error("Error fetching landing hero:", error);
+    console.error("Error fetching landing hero", error);
     return NextResponse.json(
       { error: "Failed to fetch hero content" },
       { status: 500, headers: corsHeaders },
@@ -43,75 +40,31 @@ export async function GET() {
   }
 }
 
-export async function PUT(request: Request) {
+// PUT: validate with Zod and delegate to service
+export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    const {
-      titleLine1,
-      titleLine2,
-      titleLine3,
-      bottomLine1,
-      bottomLine2,
-      primaryLabel,
-      primaryHref,
-      secondaryLabel,
-      secondaryHref,
-    } = body;
+    const parsed = landingHeroUpdateSchema.parse(body);
 
-    // Minimal validation
-    if (
-      !titleLine1 ||
-      !titleLine2 ||
-      !titleLine3 ||
-      !bottomLine1 ||
-      !bottomLine2 ||
-      !primaryLabel ||
-      !primaryHref ||
-      !secondaryLabel ||
-      !secondaryHref
-    ) {
+    const hero = await upsertHero(parsed);
+
+    return NextResponse.json({ hero }, { status: 200, headers: corsHeaders });
+  } catch (error: any) {
+    if (error.name === "ZodError") {
       return NextResponse.json(
-        { error: "All fields are required" },
+        { error: "Invalid payload", issues: error.issues },
         { status: 400, headers: corsHeaders },
       );
     }
 
-    const existing = await prisma.landingHero.findFirst();
+    console.error("Error updating landing hero", error);
+    const message =
+      typeof error?.message === "string"
+        ? error.message
+        : "Failed to update hero content";
 
-    const hero = existing
-      ? await prisma.landingHero.update({
-          where: { id: existing.id },
-          data: {
-            titleLine1,
-            titleLine2,
-            titleLine3,
-            bottomLine1,
-            bottomLine2,
-            primaryLabel,
-            primaryHref,
-            secondaryLabel,
-            secondaryHref,
-          },
-        })
-      : await prisma.landingHero.create({
-          data: {
-            titleLine1,
-            titleLine2,
-            titleLine3,
-            bottomLine1,
-            bottomLine2,
-            primaryLabel,
-            primaryHref,
-            secondaryLabel,
-            secondaryHref,
-          },
-        });
-
-    return NextResponse.json({ hero }, { status: 200, headers: corsHeaders });
-  } catch (error) {
-    console.error("Error updating landing hero:", error);
     return NextResponse.json(
-      { error: "Failed to update hero content" },
+      { error: message },
       { status: 500, headers: corsHeaders },
     );
   }

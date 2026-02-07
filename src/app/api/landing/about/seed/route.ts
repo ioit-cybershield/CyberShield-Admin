@@ -1,50 +1,38 @@
 // src/app/api/landing/about/seed/route.ts
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import { getDefaultAboutData } from "@/static/aboutDefaults";
+import { upsertAbout } from "@/services/aboutService";
 
-const DEFAULT_ABOUT = {
-  scribbleLabel: "Why CyberShield?",
-  headline:
-    "Empowering cybersecurity enthusiasts to protect, defend, and lead in the digital world.",
+const corsHeaders = {
+  "Access-Control-Allow-Origin":
+    process.env.NODE_ENV === "production"
+      ? (process.env.PUBLICSITEORIGIN ?? "https://ioit-cybershield.github.io")
+      : "http://localhost:4321",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+} as const;
 
-  item1Title: "Enhance cybersecurity skills",
-  item1Text:
-    "Learn by doing through hands-on workshops, labs, and CTF-style challenges that build practical skills in ethical hacking, network security, and threat mitigation.",
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
 
-  item2Title: "Promote a security-first mindset",
-  item2Text:
-    "Stay ahead of emerging threats with talks, demos, and discussions on the latest attacks, defenses, and ethical guidelines in cybersecurity.",
-
-  item3Title: "Foster collaboration and leadership",
-  item3Text:
-    "Join a supportive community where members share knowledge, work on real-world projects, and connect with experts to solve genuine security challenges.",
-
-  numberLeft: 20,
-  numberRight: 25,
-};
-
-const ABOUT_ID = "landing-about-default";
-
+// POST: seed default about row explicitly
 export async function POST() {
   try {
-    const about = await prisma.landingAbout.upsert({
-      where: { id: ABOUT_ID },
-      create: { id: ABOUT_ID, ...DEFAULT_ABOUT },
-      update: DEFAULT_ABOUT,
-    });
+    const defaults = getDefaultAboutData();
+    const { id: _id, ...payload } = defaults;
+
+    const about = await upsertAbout(payload);
 
     return NextResponse.json(
-      {
-        message: "Landing about seeded successfully",
-        about,
-      },
-      { status: 200 },
+      { message: "Landing about seeded successfully", about },
+      { status: 200, headers: corsHeaders },
     );
   } catch (error) {
-    console.error("Error seeding landing about:", error);
+    console.error("Error seeding landing about", error);
     return NextResponse.json(
       { error: "Failed to seed landing about" },
-      { status: 500 },
+      { status: 500, headers: corsHeaders },
     );
   }
 }
