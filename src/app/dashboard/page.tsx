@@ -4,8 +4,9 @@
 
 import React, { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
-// import Image from "next/image";
+import { useRouter } from "next/navigation";
 
+// --- Existing product slider data ---
 interface SliderItem {
   id: number;
   title: string;
@@ -237,6 +238,172 @@ const extraItems = [
   "Robotics",
 ];
 
+// --- New: Section definitions for the carousels ---
+
+type SectionPage = {
+  id: string;
+  label: string;
+  href: string;
+  description: string;
+};
+
+const landingPages: SectionPage[] = [
+  {
+    id: "hero",
+    label: "Hero",
+    href: "/dashboard/landing/hero",
+    description: "Manage the landing hero lines, bottom text, and CTAs.",
+  },
+  {
+    id: "about",
+    label: "About",
+    href: "/dashboard/landing/about",
+    description: "Edit the “Why CyberShield?” copy and feature items.",
+  },
+  {
+    id: "gallery",
+    label: "Gallery",
+    href: "/dashboard/landing/gallery",
+    description: "Curate landing gallery cards and their metadata.",
+  },
+  {
+    id: "cta",
+    label: "CTA",
+    href: "/dashboard/landing/cta",
+    description: "Control the main call-to-action block and buttons.",
+  },
+  {
+    id: "timeline",
+    label: "Timeline",
+    href: "/dashboard/landing/timeline",
+    description: "Configure Past, Today, and Future timeline states.",
+  },
+];
+
+const generalPages: SectionPage[] = [
+  {
+    id: "navbar",
+    label: "Navbar",
+    href: "/dashboard/general/navbar",
+    description: "Site-wide navigation links and visibility.",
+  },
+  {
+    id: "footer",
+    label: "Footer",
+    href: "/dashboard/general/footer",
+    description: "Footer grid links, legal links, and social icons.",
+  },
+];
+
+// --- New: inline carousel component used INSIDE existing cards ---
+
+function SectionCarouselInline({
+  badgeLabel,
+  title,
+  pages,
+  align = "left",
+}: {
+  badgeLabel: string;
+  title: string;
+  pages: SectionPage[];
+  align?: "left" | "center";
+}) {
+  const router = useRouter();
+  const [index, setIndex] = useState(0);
+  const total = pages.length;
+  const current = pages[index];
+
+  const handleNavigate = () => {
+    router.push(current.href);
+  };
+
+  const goPrev = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIndex((prev) => (prev - 1 + total) % total);
+  };
+
+  const goNext = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIndex((prev) => (prev + 1) % total);
+  };
+
+  return (
+    <div
+      className="flex w-full flex-col justify-between text-white cursor-pointer"
+      onClick={handleNavigate}
+    >
+      <div
+        className={`flex flex-col gap-1 ${
+          align === "center" ? "items-center text-center" : ""
+        }`}
+      >
+        <span className="text-[9px] uppercase tracking-[0.2em] text-white/70 font-medium">
+          {badgeLabel}
+        </span>
+        <h2 className="text-lg md:text-xl font-semibold tracking-tight">
+          {title}
+        </h2>
+
+        <div className="mt-1 inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-medium">
+          <span className="text-white/90">{current.label}</span>
+          <span className="text-white/60">
+            {index + 1} / {total}
+          </span>
+        </div>
+      </div>
+
+      <div className="mt-3 flex items-end justify-between gap-4">
+        <p className="text-[11px] leading-relaxed text-white/80 max-w-xs">
+          {current.description}
+        </p>
+
+        <div className="flex flex-col items-end gap-2">
+          <div className="inline-flex items-center gap-1 rounded-lg bg-white/10 px-2.5 py-1 text-[10px] font-medium">
+            <span>Open {current.label} editor</span>
+            <ArrowRight className="h-3 w-3" />
+          </div>
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={goPrev}
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-white/15 hover:bg-white/25 transition-colors"
+              aria-label="Previous section"
+            >
+              <ChevronLeft className="h-3.5 w-3.5" />
+            </button>
+            <button
+              type="button"
+              onClick={goNext}
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-white/15 hover:bg-white/25 transition-colors"
+              aria-label="Next section"
+            >
+              <ChevronRight className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-3 flex flex-wrap gap-1.5">
+        {pages.map((page, i) => (
+          <span
+            key={page.id}
+            className={[
+              "rounded-full border px-2 py-0.5 text-[9px]",
+              i === index
+                ? "bg-white text-black border-white"
+                : "border-white/25 text-white/75",
+            ].join(" ")}
+          >
+            {page.label}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// --- Main dashboard page ---
+
 export default function OverviewComponent() {
   const [currentSlide, setCurrentSlide] = useState(6);
   const [hoveredIndustry, setHoveredIndustry] = useState<number | null>(null);
@@ -259,48 +426,34 @@ export default function OverviewComponent() {
 
   return (
     <div className="h-screen w-screen bg-[#0a0a0a] overflow-hidden flex flex-col">
-      {/* Navbar Placeholder */}
-      <nav className="h-15 shrink-0 bg-[#0a0a0a] border-b border-white/10 flex items-center justify-between px-6">
-        <div className="text-white font-semibold text-lg tracking-tight">
-          relats
-        </div>
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-1.5">
-            <span className="text-white/60 text-xs">Full view</span>
-          </div>
-          <div className="bg-white text-black px-4 py-1.5 rounded-full text-xs font-medium">
-            Overview
-          </div>
-        </div>
-        <div className="w-8" />
-      </nav>
+      {/* Navbar placeholder remains as-is, currently omitted in code */}
 
       {/* Main Content - fills remaining viewport height */}
       <section className="flex-1 p-3 min-h-0">
+        {/* Column 1 */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 h-full max-w-450 mx-auto">
-          {/* Column 1 */}
           <div className="flex flex-col gap-3 min-h-0">
-            {/* Hero Text Box - flex-[0.6] */}
+            {/* HERO CARD: now Landing components carousel, same layout */}
             <div className="relative rounded-2xl overflow-hidden flex-[0.6] min-h-0 group">
               <div className="absolute inset-0">
                 <img
                   src="https://toptier.relats.com/wp-content/themes/relats/img/overview/text.jpg"
                   alt=""
                   className="w-full h-full object-cover"
-                  //   width={100}
-                  //   height={100}
                 />
-                <div className="absolute inset-0 bg-linear-to-br from-black/40 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-br from-black/50 via-transparent to-transparent" />
               </div>
-              <div className="relative z-10 flex items-center justify-center h-full p-6">
-                <h2 className="text-white text-2xl xl:text-3xl font-medium leading-tight text-center tracking-tight">
-                  <span className="block">Your 360º partner in</span>
-                  <span className="block">electromobility</span>
-                </h2>
+              <div className="relative z-10 flex h-full items-center p-5">
+                <SectionCarouselInline
+                  badgeLabel="Landing page"
+                  title="Landing components"
+                  pages={landingPages}
+                  align="left"
+                />
               </div>
             </div>
 
-            {/* Product Slider Box - flex-[1.4] */}
+            {/* Product Slider Box - unchanged */}
             <div className="relative rounded-2xl overflow-hidden bg-[#e8e3dc] flex-[1.4] min-h-0">
               {/* Navigation Arrows */}
               <div className="absolute top-4 right-4 z-20 flex gap-2">
@@ -393,8 +546,11 @@ export default function OverviewComponent() {
           </div>
 
           {/* Column 2 */}
-          <div className="flex flex-col gap-3 min-h-0">
-            {/* Video Box - flex-[1.3] */}
+          <div className="flex pt-20 flex-col gap-3 min-h-0">
+            <div className="text-white items-center justify-center text-center ">
+              This will be the navbar of the page.
+            </div>
+            {/* Video Box - unchanged */}
             <div className="relative rounded-2xl overflow-hidden flex-[1.3] min-h-0 bg-black">
               <video
                 className="w-full h-full object-cover"
@@ -412,31 +568,28 @@ export default function OverviewComponent() {
               <div className="absolute inset-0 bg-linear-to-t from-orange-500/20 via-transparent to-transparent pointer-events-none" />
             </div>
 
-            {/* Sustainability Box - flex-[0.7] */}
+            {/* SUSTAINABILITY CARD: now General components carousel */}
             <div className="relative rounded-2xl overflow-hidden flex-[0.7] min-h-0 group">
               <img
                 src="https://toptier.relats.com/wp-content/themes/relats/img/overview/sustainability.jpg"
-                alt="Sustainability"
+                alt="General components"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-black/20" />
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
-                <span className="text-white/80 text-[9px] uppercase tracking-[0.2em] mb-2 font-medium">
-                  Coming Soon
-                </span>
-                <h3 className="text-white text-xl xl:text-2xl font-medium mb-2 tracking-tight">
-                  Sustainability Commitment
-                </h3>
-                <p className="text-white/90 text-xs max-w-60 leading-relaxed">
-                  A new certification for a higher standard of sustainability
-                </p>
+              <div className="absolute inset-0 bg-black/35" />
+              <div className="absolute inset-0 flex items-center justify-center p-6">
+                <SectionCarouselInline
+                  badgeLabel="General"
+                  title="General components"
+                  pages={generalPages}
+                  align="center"
+                />
               </div>
             </div>
           </div>
 
           {/* Column 3 */}
           <div className="flex flex-col gap-3 min-h-0">
-            {/* Industries Box - flex-[1.3] */}
+            {/* Industries Box - unchanged */}
             <div className="relative rounded-2xl overflow-hidden bg-[#e8e3dc] p-5 flex-[1.3] min-h-0 flex flex-col">
               <div className="mb-4">
                 <span className="inline-block bg-white px-2.5 py-1 rounded-full text-[9px] uppercase tracking-wider font-semibold text-black border border-black/10">
@@ -457,7 +610,6 @@ export default function OverviewComponent() {
                         {industry.name}
                       </span>
                     </div>
-
                     {hoveredIndustry === idx && (
                       <div className="absolute right-0 top-1/2 -translate-y-1/2 w-20 h-14 rounded-lg overflow-hidden shadow-xl z-10 pointer-events-none">
                         <video
@@ -496,12 +648,12 @@ export default function OverviewComponent() {
               </div>
             </div>
 
-            {/* Contact Carousel Box - flex-[0.7] */}
+            {/* Contact Carousel Box - unchanged */}
             <a
               href="https://rv12bnjbgic.typeform.com/to/qxr7VLLd"
               target="_blank"
               rel="noopener noreferrer"
-              className="relative rounded-2xl overflow-hidden bg-white p-5 hover:shadow-xl transition-shadow group block flex-[0.7] min-h-0 flex-col"
+              className="relative rounded-2xl overflow-hidden bg-white p-5 hover:shadow-xl transition-shadow group block flex-[0.7] min-h-0 flex flex-col"
             >
               <div className="flex gap-2 mb-4 overflow-hidden flex-1">
                 {carouselItems.map((product, idx) => (
@@ -519,7 +671,6 @@ export default function OverviewComponent() {
                   </div>
                 ))}
               </div>
-
               <div className="flex justify-center mt-auto">
                 <button className="px-5 py-2 rounded-full border border-black/20 text-xs font-medium text-black hover:bg-black hover:text-white transition-all">
                   Contact

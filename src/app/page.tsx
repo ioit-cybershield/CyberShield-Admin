@@ -1,14 +1,30 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast, Toaster } from "sonner";
 import Logo from "@/assets/logo.svg";
 import Image from "next/image";
+import { redirect } from "next/navigation";
+
+async function getUserSession() {
+  const user = await authClient.getSession();
+
+  if (user) {
+    return redirect("/dashboard");
+  }
+}
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      await getUserSession();
+    };
+    checkSession();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

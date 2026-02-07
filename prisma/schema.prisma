@@ -85,3 +85,174 @@ model Jwks {
 
   @@map("jwks")
 }
+
+// prisma/schema.prisma - Update the Navbar model
+
+model Navbar {
+  id        String   @id @default(uuid())
+  key       String   @unique // events, gallery, team, about
+  label     String   // Display text
+  href      String?  // URL path
+  order     Int      @default(0) // For sorting
+  isActive  Boolean  @default(true) // Show/hide items
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("navbar")
+  @@index([order])
+}
+
+model LandingHero {
+  id             String   @id @default(uuid())
+  // Main title lines
+  titleLine1     String   // e.g. "Cyber-Security"
+  titleLine2     String   // e.g. "FOR"
+  titleLine3     String   // e.g. "Everyone"
+
+  // Bottom text lines under the title
+  bottomLine1    String   // "EMPOWERING A COMMUNITY"
+  bottomLine2    String   // "WHERE STUDENTS CONNECT, LEARN & LEAD"
+
+  // Primary CTA
+  primaryLabel   String   // "Join CyberShield"
+  primaryHref    String   // "/contact"
+
+  // Secondary CTA
+  secondaryLabel String   // "View upcoming events"
+  secondaryHref  String   // "/events"
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("landing_hero")
+  @@index([id])
+  
+}
+
+model LandingAbout {
+  id            String   @id @default(cuid())
+  scribbleLabel String   // "Why CyberShield?"
+  headline      String   // Main big sentence
+
+  item1Title    String
+  item1Text     String
+  item2Title    String
+  item2Text     String
+  item3Title    String
+  item3Text     String
+
+  numberLeft    Int      // 20
+  numberRight   Int      // 25
+
+  updatedAt     DateTime @updatedAt
+  createdAt     DateTime @default(now())
+
+  @@map("landing_about")
+  @@index([id])
+}
+
+
+model LandingTimeline {
+  id         String   @id @default(cuid())
+  key        String   @unique    // "past", "today", "future"
+  label      String                    // Visible label, e.g. "Past"
+
+  titleLine1 String                    // First title line (required)
+  titleLine2 String?                   // Second title line (optional)
+
+  desc       String
+
+  order      Int      @default(0)      // Controls spinner text order
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("landing_timeline")
+  @@index([id])
+}
+
+model LandingGalleryItem {
+  id            String   @id @default(cuid())
+  title         String
+  subtitle      String?
+  description   String
+  tags          String[]
+  buttonLabel   String?
+  buttonHref    String?
+
+  imageBlobPath String   // e.g. "gallery/uuid.png"
+  imageUrl      String   // e.g. "https://...blob.vercel-storage.com/gallery/uuid.png"
+  imageAlt      String
+
+  slot          Int?
+  isVisible     Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("landing_gallery_item")
+}
+
+model LandingFooter {
+  id             String   @id @default(cuid())
+
+  // Top grid (4 tiles)
+  gridLink1Label String
+  gridLink1Href  String
+  gridLink2Label String
+  gridLink2Href  String
+  gridLink3Label String
+  gridLink3Href  String
+  gridLink4Label String
+  gridLink4Href  String
+
+  // Bottom main link
+  homeLinkLabel  String
+  homeLinkHref   String
+
+  // Copyright line
+  copyrightText  String
+
+  // Dynamic arrays stored as JSON
+  // legalLinks: [{ id, label, href, order }]
+  legalLinks     Json
+
+  // socialLinks: [{ id, platform, label, href, order }]
+  socialLinks    Json
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("landingfooter")
+}
+
+
+model LandingCta {
+  id             String   @id @default(cuid())
+
+  // Top heading
+  headingLine1   String   // "You don't get many"
+  headingLine2   String   // "chances to be early."
+
+  // Bottom-right CTA block
+  subhead        String   // "To lead, not follow."
+  body           String   // Long paragraph, can contain \n\n for line breaks
+
+  // Primary CTA button
+  primaryLabel   String   // "REQUEST ACCESS >>"
+  primaryHref    String   // "/request-access" or external
+
+  // Secondary CTA button
+  secondaryLabel String   // "TALK TO OUR TEAM >>"
+  secondaryHref  String   // "/contact" or external
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("landing_cta")
+}
+
+
+
+
+
+
