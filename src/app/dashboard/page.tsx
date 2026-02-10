@@ -26,7 +26,7 @@ const sliderData: SliderItem[] = [
     id: 1,
     title: "PLAS8 NA",
     image:
-      "https://toptier.relats.com/wp-content/themes/relats/img/overview/slide-1.png",
+      "https://toptier.relats.com/wp-content/themes/relats/img/overview/slide-1.png ",
     specs: [
       { label: "Operating temperature", value: "-70ºC to +150ºC" },
       {
@@ -42,7 +42,7 @@ const sliderData: SliderItem[] = [
     title: "Revitex",
     subtitle: "VHG10 Purple",
     image:
-      "https://toptier.relats.com/wp-content/themes/relats/img/overview/slide-2.png",
+      "https://toptier.relats.com/wp-content/themes/relats/img/overview/slide-2.png ",
     specs: [
       {
         label: "Operating temperature",
@@ -56,7 +56,7 @@ const sliderData: SliderItem[] = [
     id: 3,
     title: "Periflex PS",
     image:
-      "https://toptier.relats.com/wp-content/themes/relats/img/overview/slide-3.png",
+      "https://toptier.relats.com/wp-content/themes/relats/img/overview/slide-3.png ",
     specs: [
       { label: "Operating temperature", value: "-70ºC to +150ºC" },
       { label: "Expansion Ratio", value: "1:2" },
@@ -73,7 +73,7 @@ const sliderData: SliderItem[] = [
     title: "Revitex",
     subtitle: "VSCTF RW",
     image:
-      "https://toptier.relats.com/wp-content/themes/relats/img/overview/slide-4.png",
+      "https://toptier.relats.com/wp-content/themes/relats/img/overview/slide-4.png ",
     specs: [
       {
         label: "Operating temperature",
@@ -93,7 +93,7 @@ const sliderData: SliderItem[] = [
     title: "Periflex",
     subtitle: "DURA HA",
     image:
-      "https://toptier.relats.com/wp-content/themes/relats/img/overview/slide-5.png",
+      "https://toptier.relats.com/wp-content/themes/relats/img/overview/slide-5.png ",
     specs: [
       { label: "Operating temperature", value: "-70ºC to +125ºC" },
       {
@@ -108,7 +108,7 @@ const sliderData: SliderItem[] = [
     title: "Periflex",
     subtitle: "EMI",
     image:
-      "https://toptier.relats.com/wp-content/themes/relats/img/overview/slide-6.png",
+      "https://toptier.relats.com/wp-content/themes/relats/img/overview/slide-6.png ",
     specs: [
       { label: "Operating temperature", value: "-70ºC to +150ºC" },
       { label: "Expansion Ratio", value: "1:2 approx (Depending on size)" },
@@ -125,7 +125,7 @@ const sliderData: SliderItem[] = [
     title: "Revitex",
     subtitle: "WSX45",
     image:
-      "https://toptier.relats.com/wp-content/themes/relats/img/overview/slide-7.png",
+      "https://toptier.relats.com/wp-content/themes/relats/img/overview/slide-7.png ",
     specs: [
       { label: "Operating temperature", value: "-70ºC to +210ºC" },
       { label: "Thermal Runaway", value: "+500ºC x 5 mins ≥ 2kv" },
@@ -136,7 +136,7 @@ const sliderData: SliderItem[] = [
     title: "Revitex",
     subtitle: "VSC25",
     image:
-      "https://toptier.relats.com/wp-content/themes/relats/img/overview/slide-8.png",
+      "https://toptier.relats.com/wp-content/themes/relats/img/overview/slide-8.png ",
     specs: [
       {
         label: "Operating temperature",
@@ -151,12 +151,12 @@ const sliderData: SliderItem[] = [
     title: "Revitex",
     subtitle: "VSCTF",
     image:
-      "https://toptier.relats.com/wp-content/themes/relats/img/overview/slide-9.png",
+      "https://toptier.relats.com/wp-content/themes/relats/img/overview/slide-9.png ",
     specs: [
       { label: "Operating temperature", value: "-70ºC to +210ºC" },
       {
         label: "Flammability",
-        value: "FMVSS 302 Self-extiguishing\nUL94 V1 (Ø 18 mm)",
+        value: "FMVSS 302 Self-extinguishing\nUL94 V1 (Ø 18 mm)",
       },
     ],
   },
@@ -166,37 +166,37 @@ const industries = [
   {
     name: "Construction machines",
     video:
-      "https://toptier.relats.com/wp-content/themes/relats/videos/overview/construction.mp4",
+      "https://toptier.relats.com/wp-content/themes/relats/videos/overview/construction.mp4 ",
     poster:
-      "https://toptier.relats.com/wp-content/themes/relats/videos/overview/construction.jpg",
+      "https://toptier.relats.com/wp-content/themes/relats/videos/overview/construction.jpg ",
   },
   {
     name: "Hybrid & electric",
     video:
-      "https://toptier.relats.com/wp-content/themes/relats/videos/overview/hybrid.mp4",
+      "https://toptier.relats.com/wp-content/themes/relats/videos/overview/hybrid.mp4 ",
     poster:
-      "https://toptier.relats.com/wp-content/themes/relats/videos/overview/hybrid.jpg",
+      "https://toptier.relats.com/wp-content/themes/relats/videos/overview/hybrid.jpg ",
   },
   {
     name: "Buses & trucks",
     video:
-      "https://toptier.relats.com/wp-content/themes/relats/videos/overview/buses.mp4",
+      "https://toptier.relats.com/wp-content/themes/relats/videos/overview/buses.mp4 ",
     poster:
-      "https://toptier.relats.com/wp-content/themes/relats/videos/overview/buses.jpg",
+      "https://toptier.relats.com/wp-content/themes/relats/videos/overview/buses.jpg ",
   },
   {
     name: "Railway",
     video:
-      "https://toptier.relats.com/wp-content/themes/relats/videos/overview/railway.mp4",
+      "https://toptier.relats.com/wp-content/themes/relats/videos/overview/railway.mp4 ",
     poster:
-      "https://toptier.relats.com/wp-content/themes/relats/videos/overview/railway.jpg",
+      "https://toptier.relats.com/wp-content/themes/relats/videos/overview/railway.jpg ",
   },
   {
     name: "Agriculture machines",
     video:
-      "https://toptier.relats.com/wp-content/themes/relats/videos/overview/agriculture.mp4",
+      "https://toptier.relats.com/wp-content/themes/relats/videos/overview/agriculture.mp4 ",
     poster:
-      "https://toptier.relats.com/wp-content/themes/relats/videos/overview/agriculture.jpg",
+      "https://toptier.relats.com/wp-content/themes/relats/videos/overview/agriculture.jpg ",
   },
 ];
 
@@ -204,27 +204,27 @@ const carouselItems = [
   {
     name: "Periflex DURA HA",
     image:
-      "https://toptier.relats.com/wp-content/themes/relats/img/overview/carousel-1.jpg",
+      "https://toptier.relats.com/wp-content/themes/relats/img/overview/carousel-1.jpg ",
   },
   {
     name: "PLAS8 NA",
     image:
-      "https://toptier.relats.com/wp-content/themes/relats/img/overview/carousel-2.jpg",
+      "https://toptier.relats.com/wp-content/themes/relats/img/overview/carousel-2.jpg ",
   },
   {
     name: "Revitex VSCTF RW",
     image:
-      "https://toptier.relats.com/wp-content/themes/relats/img/overview/carousel-3.jpg",
+      "https://toptier.relats.com/wp-content/themes/relats/img/overview/carousel-3.jpg ",
   },
   {
     name: "Revitex WSX45",
     image:
-      "https://toptier.relats.com/wp-content/themes/relats/img/overview/carousel-4.jpg",
+      "https://toptier.relats.com/wp-content/themes/relats/img/overview/carousel-4.jpg ",
   },
   {
     name: "Periflex NSGD",
     image:
-      "https://toptier.relats.com/wp-content/themes/relats/img/overview/carousel-5.jpg",
+      "https://toptier.relats.com/wp-content/themes/relats/img/overview/carousel-5.jpg ",
   },
 ];
 
@@ -239,7 +239,6 @@ const extraItems = [
 ];
 
 // --- New: Section definitions for the carousels ---
-
 type SectionPage = {
   id: string;
   label: string;
@@ -295,18 +294,13 @@ const generalPages: SectionPage[] = [
   },
 ];
 
-// --- New: inline carousel component used INSIDE existing cards ---
-
+// --- New: inline carousel component styled to match existing cards ---
 function SectionCarouselInline({
   badgeLabel,
-  title,
   pages,
-  align = "left",
 }: {
   badgeLabel: string;
-  title: string;
   pages: SectionPage[];
-  align?: "left" | "center";
 }) {
   const router = useRouter();
   const [index, setIndex] = useState(0);
@@ -329,81 +323,86 @@ function SectionCarouselInline({
 
   return (
     <div
-      className="flex w-full flex-col justify-between text-white cursor-pointer"
+      className="relative h-full flex flex-col cursor-pointer"
       onClick={handleNavigate}
     >
-      <div
-        className={`flex flex-col gap-1 ${
-          align === "center" ? "items-center text-center" : ""
-        }`}
-      >
-        <span className="text-[9px] uppercase tracking-[0.2em] text-white/70 font-medium">
-          {badgeLabel}
-        </span>
-        <h2 className="text-lg md:text-xl font-semibold tracking-tight">
-          {title}
-        </h2>
-
-        <div className="mt-1 inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-medium">
-          <span className="text-white/90">{current.label}</span>
-          <span className="text-white/60">
-            {index + 1} / {total}
-          </span>
-        </div>
+      {/* Top-right navigation arrows (same as product slider) */}
+      <div className="absolute top-4 right-4 z-20 flex gap-2">
+        <button
+          type="button"
+          onClick={goPrev}
+          className="w-9 h-9 rounded-full bg-white/90 hover:bg-white flex items-center justify-center transition-all shadow-sm"
+          aria-label="Previous section"
+        >
+          <ChevronLeft className="w-4 h-4 text-black" />
+        </button>
+        <button
+          type="button"
+          onClick={goNext}
+          className="w-9 h-9 rounded-full bg-white/90 hover:bg-white flex items-center justify-center transition-all shadow-sm"
+          aria-label="Next section"
+        >
+          <ChevronRight className="w-4 h-4 text-black" />
+        </button>
       </div>
 
-      <div className="mt-3 flex items-end justify-between gap-4">
-        <p className="text-[11px] leading-relaxed text-white/80 max-w-xs">
-          {current.description}
-        </p>
+      {/* Card content area */}
+      <div className="p-5 flex flex-col justify-between flex-1">
+        <div>
+          {/* Badge label (same as "Mobility industries" badge) */}
+          {/* <div className="mb-4">
+            <span className="inline-block bg-white px-2.5 py-1 rounded-full text-[9px] uppercase tracking-wider font-semibold text-black border border-black/10">
+              {badgeLabel}
+            </span>
+          </div> */}
 
-        <div className="flex flex-col items-end gap-2">
-          <div className="inline-flex items-center gap-1 rounded-lg bg-white/10 px-2.5 py-1 text-[10px] font-medium">
-            <span>Open {current.label} editor</span>
-            <ArrowRight className="h-3 w-3" />
-          </div>
-          <div className="flex items-center gap-1">
-            <button
-              type="button"
-              onClick={goPrev}
-              className="flex h-7 w-7 items-center justify-center rounded-full bg-white/15 hover:bg-white/25 transition-colors"
-              aria-label="Previous section"
-            >
-              <ChevronLeft className="h-3.5 w-3.5" />
-            </button>
-            <button
-              type="button"
-              onClick={goNext}
-              className="flex h-7 w-7 items-center justify-center rounded-full bg-white/15 hover:bg-white/25 transition-colors"
-              aria-label="Next section"
-            >
-              <ChevronRight className="h-3.5 w-3.5" />
-            </button>
+          {/* Current page title (matches product slider title style) */}
+          <h3 className="text-black text-3xl xl:text-4xl font-medium leading-none mb-4 tracking-tight">
+            {current.label}
+          </h3>
+
+          {/* Description (matches spec label style) */}
+          <div>
+            <div className="text-[#666] text-[9px] uppercase tracking-wider mb-0.5 font-medium">
+              Description
+            </div>
+            <div className="text-black text-base font-medium leading-tight">
+              {current.description}
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="mt-3 flex flex-wrap gap-1.5">
-        {pages.map((page, i) => (
-          <span
-            key={page.id}
-            className={[
-              "rounded-full border px-2 py-0.5 text-[9px]",
-              i === index
-                ? "bg-white text-black border-white"
-                : "border-white/25 text-white/75",
-            ].join(" ")}
-          >
-            {page.label}
-          </span>
-        ))}
+        {/* Bottom section */}
+        <div className="mt-auto pt-4">
+          {/* Page pills (matches extra items / pill style) */}
+          <div className="flex flex-wrap gap-1.5 mb-4">
+            {pages.map((page, i) => (
+              <span
+                key={page.id}
+                className={[
+                  "rounded-full border px-2 py-0.5 text-[10px] font-medium transition-colors",
+                  i === index
+                    ? "bg-black text-white border-black"
+                    : "border-black/20 text-black/60",
+                ].join(" ")}
+              >
+                {page.label}
+              </span>
+            ))}
+          </div>
+
+          {/* "Know more" style link */}
+          <button className="flex items-center gap-1.5 text-black text-xs font-medium group/link hover:opacity-70 transition-opacity">
+            {"Open editor"}
+            <ArrowRight className="w-3.5 h-3.5 group-hover/link:translate-x-1 transition-transform" />
+          </button>
+        </div>
       </div>
     </div>
   );
 }
 
 // --- Main dashboard page ---
-
 export default function OverviewComponent() {
   const [currentSlide, setCurrentSlide] = useState(6);
   const [hoveredIndustry, setHoveredIndustry] = useState<number | null>(null);
@@ -433,24 +432,12 @@ export default function OverviewComponent() {
         {/* Column 1 */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 h-full max-w-450 mx-auto">
           <div className="flex flex-col gap-3 min-h-0">
-            {/* HERO CARD: now Landing components carousel, same layout */}
-            <div className="relative rounded-2xl overflow-hidden flex-[0.6] min-h-0 group">
-              <div className="absolute inset-0">
-                <img
-                  src="https://toptier.relats.com/wp-content/themes/relats/img/overview/text.jpg"
-                  alt=""
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-linear-to-br from-black/50 via-transparent to-transparent" />
-              </div>
-              <div className="relative z-10 flex h-full items-center p-5">
-                <SectionCarouselInline
-                  badgeLabel="Landing page"
-                  title="Landing components"
-                  pages={landingPages}
-                  align="left"
-                />
-              </div>
+            {/* HERO CARD: Landing components carousel (matches product slider style) */}
+            <div className="relative rounded-2xl overflow-hidden bg-[#e8e3dc] flex-[0.6] min-h-0">
+              <SectionCarouselInline
+                badgeLabel="Landing page"
+                pages={landingPages}
+              />
             </div>
 
             {/* Product Slider Box - unchanged */}
@@ -476,7 +463,7 @@ export default function OverviewComponent() {
                 {/* Product Image */}
                 <div className="relative h-[40%] overflow-hidden">
                   <img
-                    src={currentItem.image}
+                    src={currentItem.image || "/placeholder.svg"}
                     alt={currentItem.title}
                     className="w-full h-full object-cover object-center"
                   />
@@ -546,8 +533,8 @@ export default function OverviewComponent() {
           </div>
 
           {/* Column 2 */}
-          <div className="flex pt-20 flex-col gap-3 min-h-0">
-            <div className="text-white items-center justify-center text-center ">
+          <div className="flex pt-10 flex-col gap-3 min-h-0">
+            <div className="text-white items-center justify-center text-center">
               This will be the navbar of the page.
             </div>
             {/* Video Box - unchanged */}
@@ -568,22 +555,12 @@ export default function OverviewComponent() {
               <div className="absolute inset-0 bg-linear-to-t from-orange-500/20 via-transparent to-transparent pointer-events-none" />
             </div>
 
-            {/* SUSTAINABILITY CARD: now General components carousel */}
-            <div className="relative rounded-2xl overflow-hidden flex-[0.7] min-h-0 group">
-              <img
-                src="https://toptier.relats.com/wp-content/themes/relats/img/overview/sustainability.jpg"
-                alt="General components"
-                className="w-full h-full object-cover"
+            {/* SUSTAINABILITY CARD: General components carousel (matches product slider style) */}
+            <div className="relative rounded-2xl overflow-hidden bg-[#e8e3dc] flex-[0.7] min-h-0">
+              <SectionCarouselInline
+                badgeLabel="General"
+                pages={generalPages}
               />
-              <div className="absolute inset-0 bg-black/35" />
-              <div className="absolute inset-0 flex items-center justify-center p-6">
-                <SectionCarouselInline
-                  badgeLabel="General"
-                  title="General components"
-                  pages={generalPages}
-                  align="center"
-                />
-              </div>
             </div>
           </div>
 
@@ -660,7 +637,7 @@ export default function OverviewComponent() {
                   <div key={idx} className="shrink-0 w-16 text-center">
                     <div className="w-16 h-16 rounded-lg overflow-hidden mb-1.5 bg-[#f5f5f5]">
                       <img
-                        src={product.image}
+                        src={product.image || "/placeholder.svg"}
                         alt={product.name}
                         className="w-full h-full object-cover"
                       />
