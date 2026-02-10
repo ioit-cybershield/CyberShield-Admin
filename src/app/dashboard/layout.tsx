@@ -11,13 +11,12 @@ export const metadata: Metadata = {
   authors: [{ name: "CyberShield Team", url: "https://cybershield.club" }],
 };
 
-const session = await auth.api.getSession({
-  headers: await headers(),
-});
-
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
   if (!session) {
     return redirect("/");
   }

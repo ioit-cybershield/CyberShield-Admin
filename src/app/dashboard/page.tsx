@@ -445,12 +445,16 @@ export default function OverviewComponent() {
               {/* Navigation Arrows */}
               <div className="absolute top-4 right-4 z-20 flex gap-2">
                 <button
+                  // button-type="Previous Slide"
+                  title="Previous Slide"
                   onClick={prevSlide}
                   className="w-9 h-9 rounded-full bg-white/90 hover:bg-white flex items-center justify-center transition-all shadow-sm"
                 >
                   <ChevronLeft className="w-4 h-4 text-black" />
                 </button>
                 <button
+                  title="Next slide"
+                  button-name="Next Slide"
                   onClick={nextSlide}
                   className="w-9 h-9 rounded-full bg-white/90 hover:bg-white flex items-center justify-center transition-all shadow-sm"
                 >
@@ -630,7 +634,7 @@ export default function OverviewComponent() {
               href="https://rv12bnjbgic.typeform.com/to/qxr7VLLd"
               target="_blank"
               rel="noopener noreferrer"
-              className="relative rounded-2xl overflow-hidden bg-white p-5 hover:shadow-xl transition-shadow group block flex-[0.7] min-h-0 flex flex-col"
+              className="relative rounded-2xl overflow-hidden bg-white p-5 hover:shadow-xl transition-shadow group block flex-[0.7] min-h-0 flex-col"
             >
               <div className="flex gap-2 mb-4 overflow-hidden flex-1">
                 {carouselItems.map((product, idx) => (
@@ -649,7 +653,11 @@ export default function OverviewComponent() {
                 ))}
               </div>
               <div className="flex justify-center mt-auto">
-                <button className="px-5 py-2 rounded-full border border-black/20 text-xs font-medium text-black hover:bg-black hover:text-white transition-all">
+                <button
+                  type="button"
+                  aria-label="Contact us via form"
+                  className="px-5 py-2 rounded-full border border-black/20 text-xs font-medium text-black hover:bg-black hover:text-white transition-all"
+                >
                   Contact
                 </button>
               </div>
